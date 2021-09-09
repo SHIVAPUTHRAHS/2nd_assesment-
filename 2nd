@@ -1,0 +1,141 @@
+
+
+
+1.	Explain why concurrency is not parallelism?
+Concurrency: In programming, concurrency is that independently executing of the processes and it is about dealing with lots of things at once.
+Parallelism: parallelism is the simultaneous execution of the process and it is about doing lots of things at once.
+2.	What is go channel? What operations are available on the channel type?
+Go channel can only transfer data of the same type, different types of data are not allowed to transport from the same channel. The communication is bidirectional it means that you can send and receive values from the same channel. 
+We can create Go channel by using chan keyword and also create a channel using make ().
+Two operations are available:
+     1. Send operation.
+     2. Receive operation.
+3. Write a simple Golang program that uses a go routine and a channel.
+package main
+import "fmt"
+func printChanData(data chan int) {
+    fmt.Println("Data in th channel is:- ", <-data)
+}
+func main() {
+    fmt.Println("started.. ")
+        data := make(chan int)
+        go printChanData(data2)
+        data <- 255
+    fmt.Println("ended..")
+}
+
+4.	How do you specify the direction of a channel type?
+
+      1. var send chan <-  string             //sending 
+      2. var receive <- chan string        // receiving 
+
+5.	Write your own Sleep function using time. After.
+package main
+import (
+    "fmt"
+    "time"
+)
+func main() {
+  
+    mychan1 := make(chan string, 2)
+    go func() {
+        time.Sleep(2 * time.Second)
+        mychan1 <- "output1"
+    }()
+    select {
+  
+    case out := <-mychan1:
+        fmt.Println(out)
+    case <-time.After(3 * time.Second):
+        fmt.Println("timeout....1")
+    }
+     mychan2 := make(chan string, 2)
+     go func() {
+        time.Sleep(6 * time.Second)
+        mychan2 <- "output2"
+    }()
+  
+    select {
+  
+    case out := <-mychan2:
+        fmt.Println(out)
+    case <-time.After(3 * time.Second):
+        fmt.Println("timeout....2")
+    }
+}
+
+6.	What is a buffered channel? How would you create one with a capacity of 20?
+
+Buffered channels: Buffered channels allow accepting a limited number of values without a corresponding receiver for those values. Buffered channels can be created by passing an additional capacity parameter to the make( ) function which specifies the size of the buffer.
+package main 
+import (
+    "fmt"
+    "time"
+)  
+func writefuncation(ch chan int) {
+    for i := 0; i < 20; i++ {
+        ch <- i
+        fmt.Println("successfully wrote", i, "to ch")
+    }
+    close(ch)
+}
+func main() {
+  
+   ch := make(chan int, 20)
+    go writefuncation(ch)
+    time.Sleep(2 * time.Second)
+    for v := range ch {
+        fmt.Println("reading value", v, "from ch")
+        time.Sleep(1 * time.Second)
+  
+    }	
+
+7.	 Why is there only one channel in this example, even though there are two go routine calls? The select statement lets a go routine wait on multiple communication operations. What is the order in which statements run in the program below?
+package main
+
+import (  
+    "fmt"
+    "time"
+    )
+func min(x, y int) int {
+	if x > y {
+	    time.Sleep(1 * time.Second)
+		fmt.Println("minimum number is:",y)
+	} else {
+     time.Sleep(1 * time.Second)
+	fmt.Println("minimum number is:",x)
+}
+return 0
+}
+func max(x, y int) int {
+	if x < y {
+	    time.Sleep(1 * time.Second)
+	    fmt.Println("maximum number is:",y)
+	}else{
+	    time.Sleep(1 * time.Second)
+	    fmt.Println("maximum number is:",x)
+}
+    return 0
+}
+func main() {
+     var x, y int 
+     fmt.Println("enter two numbers:")
+     fmt.Scanf("%d",&x)
+     fmt.Scanf("%d",&y)
+	 go min(x,y)
+	 time.Sleep(2 * time.Second)
+	 max(x,y)
+     time.Sleep(2 * time.Second)
+     go max(x,y)
+}
+
+8.	Implement min and max behaviour. Implement Min(x, y int) and Max(x, y int) using goroutines that take two integers and return the lesser or greater value, respectively.
+
+C and quit are un buffered. Channels block, and in this programme using two un buffered channels.
+ main() and go func() ... are running simultaneously
+
+             Secondly, when we use the go keyword to start a new go routine,       the execution will happen in parallel with other routines. So in the example, we have two go routines running: the routine started by func main(), and the routine started by go func()... inside the func main()
+
+
+
+
